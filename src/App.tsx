@@ -54,9 +54,9 @@ function App() {
   });
 
   // Initialize geolocation on app start
-  useEffect(() = >
+  useEffect(() =>
                  {
-                   const initializeLocation = async() = > {
+                   const initializeLocation = async() => {
                      try {
                        const location = await getCurrentLocation();
                        setGeolocation({
@@ -96,42 +96,42 @@ function App() {
 
   const nearbyFlyers =
       geolocation.userLocation
-          ? sortedFlyers.filter(flyer = > (flyer.location.distance || 0) <= 10)
+          ? sortedFlyers.filter(flyer => (flyer.location.distance || 0) <= 10)
           : [];
 
   // Simulate view tracking
   useEffect(
-      () = >
+      () =>
            {
              if (selectedFlyer) {
                setFlyers(
                    prev =
-                       > prev.map(flyer = > flyer.id ==
+                       > prev.map(flyer => flyer.id ==
                                   = selectedFlyer.id
                                         ? {... flyer, views : flyer.views + 1}
                                         : flyer));
              }
            },
       [selectedFlyer]);
-  useEffect(() = >
+  useEffect(() =>
                  {
                    const unsubscribe = onAuthStateChanged(
-                       auth, (user) = > {
+                       auth, (user) => {
                          setFirebaseUser(user);
                          if (user) {
                            // Optionally map user to currentUser in your system
                            const matchedUser =
-                               mockUsers.find(u = > u.email == = user.email);
+                               mockUsers.find(u => u.email == = user.email);
                            if (matchedUser) {
                              setCurrentUser(matchedUser);
                            }
                          }
                        });
 
-                   return () = > unsubscribe();
+                   return () => unsubscribe();
                  },
             []);
-  const handleSignup = async() = > {
+  const handleSignup = async() => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       alert("Signed up successfully");
@@ -140,7 +140,7 @@ function App() {
     }
   };
 
-  const handleLogin = async() = > {
+  const handleLogin = async() => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert("Logged in");
@@ -149,7 +149,7 @@ function App() {
     }
   };
 
-  const handleLogout = async() = > {
+  const handleLogout = async() => {
     await signOut(auth);
     alert("Logged out");
   };
@@ -160,7 +160,7 @@ function App() {
                                      number;
                                    lng:
                                      number
-                                 }) = > {
+                                 }) => {
     setGeolocation({
       userLocation : location,
       isLoading : false,
@@ -172,13 +172,13 @@ function App() {
                        $ { location.lng.toFixed(2) }`);
   };
 
-  const handleLocationDenied = () = > {
+  const handleLocationDenied = () => {
     setShowGeolocationPrompt(false);
     localStorage.setItem('geolocation-prompted', 'true');
   };
 
-  const handleCategorySelect = (categoryId : string) = > {
-    const category = categories.find(c = > c.id == = categoryId);
+  const handleCategorySelect = (categoryId : string) => {
+    const category = categories.find(c => c.id == = categoryId);
     if (category) {
       if (category.id == = 'sports') {
         setIsSportsModalOpen(true);
@@ -189,30 +189,30 @@ function App() {
     }
   };
 
-  const handleSportsLeagueSelect = (leagueId : string) = > {
-    const sportsCategory = categories.find(c = > c.id == = 'sports');
+  const handleSportsLeagueSelect = (leagueId : string) => {
+    const sportsCategory = categories.find(c => c.id == = 'sports');
     if (sportsCategory) {
       setSelectedCategory(sportsCategory);
       setCurrentView('category');
     }
   };
 
-  const handleFlyerClick = (flyer : Flyer) = > {
+  const handleFlyerClick = (flyer : Flyer) => {
     setSelectedFlyer(flyer);
     setCurrentView('detail');
   };
 
-  const handleReact = (flyerId : string) = > {
+  const handleReact = (flyerId : string) => {
     setFlyers(
         prev =
-            > prev.map(flyer = > flyer.id ==
+            > prev.map(flyer => flyer.id ==
                        = flyerId ? {... flyer, reactions : flyer.reactions + 1}
                                  : flyer));
   };
 
   const handleSubmitReview = (flyerId
                               : string, reviewData
-                              : Omit<Review, 'id' | 'date' | 'helpful'>) = > {
+                              : Omit<Review, 'id' | 'date' | 'helpful'>) => {
     const newReview : Review = {
       ... reviewData,
       id : `review_${Date.now()}`,
@@ -220,11 +220,11 @@ function App() {
       helpful : 0,
     };
 
-    setFlyers(prev = > prev.map(flyer = > {
+    setFlyers(prev => prev.map(flyer => {
       if (flyer.id == = flyerId) {
         const updatedReviews = [... flyer.reviews, newReview ];
         const averageRating =
-            updatedReviews.reduce((sum, review) = > sum + review.rating, 0) /
+            updatedReviews.reduce((sum, review) => sum + review.rating, 0) /
             updatedReviews.length;
         return {
           ... flyer,
@@ -237,11 +237,11 @@ function App() {
 
     // Update selected flyer if it's the one being reviewed
     if (selectedFlyer?.id === flyerId) {
-      setSelectedFlyer(prev = > {
+      setSelectedFlyer(prev => {
         if (!prev) return null;
         const updatedReviews = [... prev.reviews, newReview ];
         const averageRating =
-            updatedReviews.reduce((sum, review) = > sum + review.rating, 0) /
+            updatedReviews.reduce((sum, review) => sum + review.rating, 0) /
             updatedReviews.length;
         return {
           ... prev,
@@ -252,13 +252,13 @@ function App() {
     }
   };
 
-  const handleHelpfulClick = (flyerId : string, reviewId : string) = > {
-    setFlyers(prev = > prev.map(flyer = > {
+  const handleHelpfulClick = (flyerId : string, reviewId : string) => {
+    setFlyers(prev => prev.map(flyer => {
       if (flyer.id == = flyerId) {
         return {
           ... flyer,
           reviews : flyer.reviews.map(
-              review = > review.id ==
+              review => review.id ==
               = reviewId ? {... review, helpful : review.helpful + 1} : review),
         };
       }
@@ -267,19 +267,19 @@ function App() {
 
     // Update selected flyer if it's the one being reviewed
     if (selectedFlyer?.id === flyerId) {
-      setSelectedFlyer(prev = > {
+      setSelectedFlyer(prev => {
         if (!prev) return null;
         return {
           ... prev,
           reviews : prev.reviews.map(
-              review = > review.id ==
+              review => review.id ==
               = reviewId ? {... review, helpful : review.helpful + 1} : review),
         };
       });
     }
   };
 
-  const handlePostFlyer = (flyerData : any) = > {
+  const handlePostFlyer = (flyerData : any) => {
     const premiumRequired = checkPremiumRequired(currentUser);
     if (premiumRequired) {
       setPremiumModalReason('required');
@@ -329,19 +329,19 @@ function App() {
       averageRating : 0
     };
 
-    setFlyers(prev = > [ newFlyer, ... prev ]);
+    setFlyers(prev => [ newFlyer, ... prev ]);
 
-    if (!businessNames.find(b = > b.businessName == = flyerData.businessName)) {
+    if (!businessNames.find(b => b.businessName == = flyerData.businessName)) {
       const newBusiness : BusinessRegistry = {
         businessName : flyerData.businessName,
         userId : currentUser.id,
         registeredDate : new Date().toISOString().split('T')[0],
         location : {city : flyerData.city, state : flyerData.state || 'IL'}
       };
-      setBusinessNames(prev = > [... prev, newBusiness ]);
+      setBusinessNames(prev => [... prev, newBusiness ]);
     }
 
-    setCurrentUser(prev = > ({
+    setCurrentUser(prev => ({
                             ... prev,
                             postsCount : prev.postsCount + 1,
                             monthlyPostsCount : monthlyCount + 1,
@@ -349,7 +349,7 @@ function App() {
                             businessName : flyerData.businessName
                           }));
 
-    setUsers(prev = > prev.map(user = > user.id == = currentUser.id ? {
+    setUsers(prev => prev.map(user => user.id == = currentUser.id ? {
       ... user,
       postsCount : user.postsCount + 1,
       monthlyPostsCount : monthlyCount + 1,
@@ -359,7 +359,7 @@ function App() {
                                                                     : user));
   };
 
-  const handlePremiumSubscribe = (plan : 'monthly' | 'yearly') = > {
+  const handlePremiumSubscribe = (plan : 'monthly' | 'yearly') => {
     const expiryDate = new Date();
     if (plan == = 'monthly') {
       expiryDate.setMonth(expiryDate.getMonth() + 1);
@@ -368,13 +368,13 @@ function App() {
     }
 
     setCurrentUser(
-        prev = > ({
+        prev => ({
                  ... prev,
                  isPremium : true,
                  premiumExpiryDate : expiryDate.toISOString().split('T')[0]
                }));
 
-    setUsers(prev = > prev.map(user = > user.id == = currentUser.id ? {
+    setUsers(prev => prev.map(user => user.id == = currentUser.id ? {
       ... user,
       isPremium : true,
       premiumExpiryDate : expiryDate.toISOString().split('T')[0]
@@ -385,7 +385,7 @@ function App() {
     alert(`Premium subscription activated !You can now post unlimited flyers.`);
   };
 
-  const handleProfileClick = () = > {
+  const handleProfileClick = () => {
     if (currentUser.isAdmin) {
       setCurrentView('admin');
     } else {
@@ -394,11 +394,11 @@ function App() {
   };
 
   const filteredFlyers = selectedCategory
-                             ? sortedFlyers.filter(flyer = > flyer.category ==
+                             ? sortedFlyers.filter(flyer => flyer.category ==
                                                    = selectedCategory.id)
                              : sortedFlyers;
 
-  const userFlyers = flyers.filter(flyer = > flyer.userId == = currentUser.id);
+  const userFlyers = flyers.filter(flyer => flyer.userId == = currentUser.id);
   const currentMonth = new Date().toISOString().slice(0, 7);
   const monthlyPostsCount = currentUser.lastPostMonth ==
       = currentMonth ? currentUser.monthlyPostsCount : 0;
@@ -473,14 +473,14 @@ function App() {
     currentView ==
         = 'category' && selectedCategory &&
           (<FlyerList category = {selectedCategory} flyers =
-                {filteredFlyers} onBack = {() = > setCurrentView(
+                {filteredFlyers} onBack = {() => setCurrentView(
                                                       'home')} onFlyerClick = {
                     handleFlyerClick} onReact = {handleReact} />)}
       
       {
     currentView == = 'detail' && selectedFlyer &&
                      (<FlyerDetail flyer = {selectedFlyer} onBack =
-                           {() = > setCurrentView('category')} onReact =
+                           {() => setCurrentView('category')} onReact =
                                {handleReact} onSubmitReview =
                                    {handleSubmitReview} onHelpfulClick =
                                        {handleHelpfulClick} />)}
@@ -489,7 +489,7 @@ function App() {
     currentView ==
         = 'profile' &&
           (<UserProfile user = {currentUser} userFlyers = {userFlyers} onBack =
-                {() = > setCurrentView(
+                {() => setCurrentView(
                             'home')} onFlyerClick = {handleFlyerClick} />)}
 
       {currentView === 'admin' && currentUser.isAdmin && (
