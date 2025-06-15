@@ -480,86 +480,102 @@ const monthlyPostsCount = currentUser.lastPostMonth === currentMonth
       )}
       
       {
-    currentView ==
-        = 'category' && selectedCategory &&
-          (<FlyerList category = {selectedCategory} flyers =
-                {filteredFlyers} onBack = {() => setCurrentView(
-                                                      'home')} onFlyerClick = {
-                    handleFlyerClick} onReact = {handleReact} />)}
-      
-      {
-    currentView === 'detail' && selectedFlyer &&
-                     (<FlyerDetail flyer = {selectedFlyer} onBack =
-                           {() => setCurrentView('category')} onReact =
-                               {handleReact} onSubmitReview =
-                                   {handleSubmitReview} onHelpfulClick =
-                                       {handleHelpfulClick} />)}
-
-      {
-    currentView ==
-        = 'profile' &&
-          (<UserProfile user = {currentUser} userFlyers = {userFlyers} onBack =
-                {() => setCurrentView(
-                            'home')} onFlyerClick = {handleFlyerClick} />)}
-
-      {currentView === 'admin' && currentUser.isAdmin && (
-        <AdminDashboard
-          users={users}
-          flyers={flyers}
-          onBack={() => setCurrentView('home')}
-          onFlyerClick={handleFlyerClick}
-        />
-      )}
-      
-      <PostFlyerModal
-        isOpen={isPostModalOpen}
-        onClose={() => setIsPostModalOpen(false)}
-        categories={categories}
-        userPostsCount={currentUser.postsCount}
-        monthlyPostsCount={monthlyPostsCount}
-        onSubmit={handlePostFlyer}
-        businessNames={businessNames}
-        currentUser={currentUser}
-      />
-
-      <PremiumSubscriptionModal
-        isOpen={isPremiumModalOpen}
-        onClose={() => setIsPremiumModalOpen(false)}
-        onSubscribe={handlePremiumSubscribe}
-        reason={premiumModalReason}
-      />
-
-      <SportsLeaguesModal
-        isOpen={isSportsModalOpen}
-        onClose={() => setIsSportsModalOpen(false)}
-        onLeagueSelect={handleSportsLeagueSelect}
-      />
-
-      <MapView
-        isOpen={isMapViewOpen}
-        onClose={() => setIsMapViewOpen(false)}
-        flyers={nearbyFlyers.length > 0 ? nearbyFlyers : sortedFlyers.slice(0, 10)}
-        userLocation={geolocation.userLocation}
-        onFlyerClick={handleFlyerClick}
-      />
-
-      {showGeolocationPrompt && (
-        <GeolocationPrompt
-          onLocationGranted={handleLocationGranted}
-          onLocationDenied={handleLocationDenied}
-          onClose={() => setShowGeolocationPrompt(false)}
-        />
-      )}
-      
-      {/* Floating Action Button for mobile */}
-      <button 
-        onClick={() => setIsPostModalOpen(true)}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-lg hover:opacity-90 transition-opacity md:hidden"
-      >
-        <Plus className="h-6 w-6" />
-      </button>
-    </div>
-  );
+  currentView === 'category' && selectedCategory && (
+    <FlyerList
+      category={selectedCategory}
+      flyers={filteredFlyers}
+      onBack={() => setCurrentView('home')}
+      onFlyerClick={handleFlyerClick}
+      onReact={handleReact}
+    />
+  )
 }
 
+{
+  currentView === 'detail' && selectedFlyer && (
+    <FlyerDetail
+      flyer={selectedFlyer}
+      onBack={() => setCurrentView('category')}
+      onReact={handleReact}
+      onSubmitReview={handleSubmitReview}
+      onHelpfulClick={handleHelpfulClick}
+    />
+  )
+}
+
+{
+  currentView === 'profile' && (
+    <UserProfile
+      user={currentUser}
+      userFlyers={userFlyers}
+      onBack={() => setCurrentView('home')}
+      onFlyerClick={handleFlyerClick}
+    />
+  )
+}
+
+{
+  currentView === 'admin' && currentUser.isAdmin && (
+    <AdminDashboard
+      users={users}
+      flyers={flyers}
+      onBack={() => setCurrentView('home')}
+      onFlyerClick={handleFlyerClick}
+    />
+  )
+}
+
+<PostFlyerModal
+  isOpen={isPostModalOpen}
+  onClose={() => setIsPostModalOpen(false)}
+  categories={categories}
+  userPostsCount={currentUser.postsCount}
+  monthlyPostsCount={monthlyPostsCount}
+  onSubmit={handlePostFlyer}
+  businessNames={businessNames}
+  currentUser={currentUser}
+/>
+
+<PremiumSubscriptionModal
+  isOpen={isPremiumModalOpen}
+  onClose={() => setIsPremiumModalOpen(false)}
+  onSubscribe={handlePremiumSubscribe}
+  reason={premiumModalReason}
+/>
+
+<SportsLeaguesModal
+  isOpen={isSportsModalOpen}
+  onClose={() => setIsSportsModalOpen(false)}
+  onLeagueSelect={handleSportsLeagueSelect}
+/>
+
+<MapView
+  isOpen={isMapViewOpen}
+  onClose={() => setIsMapViewOpen(false)}
+  flyers={nearbyFlyers.length > 0 ? nearbyFlyers : sortedFlyers.slice(0, 10)}
+  userLocation={geolocation.userLocation}
+  onFlyerClick={handleFlyerClick}
+/>
+
+{showGeolocationPrompt && (
+  <GeolocationPrompt
+    onLocationGranted={handleLocationGranted}
+    onLocationDenied={handleLocationDenied}
+    onClose={() => setShowGeolocationPrompt(false)}
+  />
+)}
+
+/* Floating Action Button for mobile */
+<button
+  onClick={() => setIsPostModalOpen(true)}
+  className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-lg hover:opacity-90 transition-opacity md:hidden"
+>
+  <Plus className="h-6 w-6" />
+</button>
+
+</div>
+);
+}
+
+export default App;
 export default App;
