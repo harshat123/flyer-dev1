@@ -199,206 +199,219 @@ useEffect(() => {
     setCurrentView('detail');
   };
 
-  const handleReact = (flyerId : string) => {
-    setFlyers(
-        prev =
-            > prev.map(flyer => flyer.id ==
-                       = flyerId ? {... flyer, reactions : flyer.reactions + 1}
-                                 : flyer));
+  const handleReact = (flyerId: string) => {
+  setFlyers(prev =>
+    prev.map(flyer =>
+      flyer.id === flyerId
+        ? { ...flyer, reactions: flyer.reactions + 1 }
+        : flyer
+    )
+  );
+};
+
+const handleSubmitReview = (flyerId: string, reviewData: Omit<Review, 'id' | 'date' | 'helpful'>) => {
+  const newReview: Review = {
+    ...reviewData,
+    id: `review_${Date.now()}`,
+    date: new Date().toISOString().split('T')[0],
+    helpful: 0,
   };
 
-  const handleSubmitReview = (flyerId
-                              : string, reviewData
-                              : Omit<Review, 'id' | 'date' | 'helpful'>) => {
-    const newReview : Review = {
-      ... reviewData,
-      id : `review_${Date.now()}`,
-      date : new Date().toISOString().split('T')[0],
-      helpful : 0,
-    };
-
-    setFlyers(prev => prev.map(flyer => {
+  setFlyers(prev =>
+    prev.map(flyer => {
       if (flyer.id === flyerId) {
-        const updatedReviews = [... flyer.reviews, newReview ];
+        const updatedReviews = [...flyer.reviews, newReview];
         const averageRating =
-            updatedReviews.reduce((sum, review) => sum + review.rating, 0) /
-            updatedReviews.length;
+          updatedReviews.reduce((sum, review) => sum + review.rating, 0) /
+          updatedReviews.length;
         return {
-          ... flyer,
-          reviews : updatedReviews,
-          averageRating : Math.round(averageRating * 10) / 10,
+          ...flyer,
+          reviews: updatedReviews,
+          averageRating: Math.round(averageRating * 10) / 10,
         };
       }
       return flyer;
-    }));
+    })
+  );
 
-    // Update selected flyer if it's the one being reviewed
-    if (selectedFlyer?.id === flyerId) {
-      setSelectedFlyer(prev => {
-        if (!prev) return null;
-        const updatedReviews = [... prev.reviews, newReview ];
-        const averageRating =
-            updatedReviews.reduce((sum, review) => sum + review.rating, 0) /
-            updatedReviews.length;
-        return {
-          ... prev,
-          reviews : updatedReviews,
-          averageRating : Math.round(averageRating * 10) / 10,
-        };
-      });
-    }
-  };
-
-  const handleHelpfulClick = (flyerId : string, reviewId : string) => {
-    setFlyers(prev => prev.map(flyer => {
-      if (flyer.id === flyerId) {
-        return {
-          ... flyer,
-          reviews : flyer.reviews.map(
-              review => review.id ==
-              = reviewId ? {... review, helpful : review.helpful + 1} : review),
-        };
-      }
-      return flyer;
-    }));
-
-    // Update selected flyer if it's the one being reviewed
-    if (selectedFlyer?.id === flyerId) {
-      setSelectedFlyer(prev => {
-        if (!prev) return null;
-        return {
-          ... prev,
-          reviews : prev.reviews.map(
-              review => review.id ==
-              = reviewId ? {... review, helpful : review.helpful + 1} : review),
-        };
-      });
-    }
-  };
-
-  const handlePostFlyer = (flyerData : any) => {
-    const premiumRequired = checkPremiumRequired(currentUser);
-    if (premiumRequired) {
-      setPremiumModalReason('required');
-      setIsPremiumModalOpen(true);
-      return;
-    }
-
-    if (!checkBusinessNameAvailable(flyerData.businessName, businessNames,
-                                    currentUser.id)) {
-      alert(
-          'This business name is already registered by another user. Please choose a different name.');
-      return;
-    }
-
-    const currentMonth = new Date().toISOString().slice(0, 7);
-    const monthlyCount = currentUser.lastPostMonth ==
-        = currentMonth ? currentUser.monthlyPostsCount : 0;
-
-    const newFlyer : Flyer = {
-      id : Date.now().toString(),
-      title : flyerData.title,
-      description : flyerData.description,
-      category : flyerData.category as any,
-      businessName : flyerData.businessName,
-      imageUrl : flyerData.imageUrl ||
-          'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=500',
-      discount : flyerData.discount,
-      location : {
-        address : flyerData.address,
-        city : flyerData.city,
-        state : flyerData.state || 'IL',
-        zipCode : flyerData.zipCode || '60601',
-        lat : 41.8781 + (Math.random() - 0.5) * 0.1,
-        lng : -87.6298 + (Math.random() - 0.5) * 0.1,
-        distance : Math.round(Math.random() * 5 * 10) / 10
-      },
-      views : 0,
-      reactions : 0,
-      postedDate : new Date().toISOString().split('T')[0],
-      expiryDate : flyerData.expiryDate,
-      redemptionCode : `CODE${
-          Math.random().toString(36).substr(2, 6).toUpperCase()}`,
-      isActive : true,
-      userId : currentUser.id,
-      isPremium : currentUser.isPremium,
-      reviews : [],
-      averageRating : 0
-    };
-
-    setFlyers(prev => [ newFlyer, ... prev ]);
-
-    if (!businessNames.find(b => b.businessName === flyerData.businessName)) {
-      const newBusiness : BusinessRegistry = {
-        businessName : flyerData.businessName,
-        userId : currentUser.id,
-        registeredDate : new Date().toISOString().split('T')[0],
-        location : {city : flyerData.city, state : flyerData.state || 'IL'}
+  if (selectedFlyer?.id === flyerId) {
+    setSelectedFlyer(prev => {
+      if (!prev) return null;
+      const updatedReviews = [...prev.reviews, newReview];
+      const averageRating =
+        updatedReviews.reduce((sum, review) => sum + review.rating, 0) /
+        updatedReviews.length;
+      return {
+        ...prev,
+        reviews: updatedReviews,
+        averageRating: Math.round(averageRating * 10) / 10,
       };
-      setBusinessNames(prev => [... prev, newBusiness ]);
-    }
+    });
+  }
+};
 
-    setCurrentUser(prev => ({
-                            ... prev,
-                            postsCount : prev.postsCount + 1,
-                            monthlyPostsCount : monthlyCount + 1,
-                            lastPostMonth : currentMonth,
-                            businessName : flyerData.businessName
-                          }));
+const handleHelpfulClick = (flyerId: string, reviewId: string) => {
+  setFlyers(prev =>
+    prev.map(flyer => {
+      if (flyer.id === flyerId) {
+        return {
+          ...flyer,
+          reviews: flyer.reviews.map(review =>
+            review.id === reviewId
+              ? { ...review, helpful: review.helpful + 1 }
+              : review
+          ),
+        };
+      }
+      return flyer;
+    })
+  );
 
-    setUsers(prev => prev.map(user => user.id === currentUser.id ? {
-      ... user,
-      postsCount : user.postsCount + 1,
-      monthlyPostsCount : monthlyCount + 1,
-      lastPostMonth : currentMonth,
-      businessName : flyerData.businessName
-    }
-                                                                    : user));
-  };
+  if (selectedFlyer?.id === flyerId) {
+    setSelectedFlyer(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        reviews: prev.reviews.map(review =>
+          review.id === reviewId
+            ? { ...review, helpful: review.helpful + 1 }
+            : review
+        ),
+      };
+    });
+  }
+};
 
-  const handlePremiumSubscribe = (plan : 'monthly' | 'yearly') => {
-    const expiryDate = new Date();
-    if (plan === 'monthly') {
-      expiryDate.setMonth(expiryDate.getMonth() + 1);
-    } else {
-      expiryDate.setFullYear(expiryDate.getFullYear() + 1);
-    }
+const handlePostFlyer = (flyerData: any) => {
+  const premiumRequired = checkPremiumRequired(currentUser);
+  if (premiumRequired) {
+    setPremiumModalReason('required');
+    setIsPremiumModalOpen(true);
+    return;
+  }
 
-    setCurrentUser(
-        prev => ({
-                 ... prev,
-                 isPremium : true,
-                 premiumExpiryDate : expiryDate.toISOString().split('T')[0]
-               }));
+  if (!checkBusinessNameAvailable(flyerData.businessName, businessNames, currentUser.id)) {
+    alert('This business name is already registered by another user. Please choose a different name.');
+    return;
+  }
 
-    setUsers(prev => prev.map(user => user.id === currentUser.id ? {
-      ... user,
-      isPremium : true,
-      premiumExpiryDate : expiryDate.toISOString().split('T')[0]
-    }
-                                                                    : user));
-
-    setIsPremiumModalOpen(false);
-    alert(`Premium subscription activated !You can now post unlimited flyers.`);
-  };
-
-  const handleProfileClick = () => {
-    if (currentUser.isAdmin) {
-      setCurrentView('admin');
-    } else {
-      setCurrentView('profile');
-    }
-  };
-
-  const filteredFlyers = selectedCategory
-                             ? sortedFlyers.filter(flyer => flyer.category ==
-                                                   = selectedCategory.id)
-                             : sortedFlyers;
-
-  const userFlyers = flyers.filter(flyer => flyer.userId === currentUser.id);
   const currentMonth = new Date().toISOString().slice(0, 7);
-  const monthlyPostsCount = currentUser.lastPostMonth ==
-      = currentMonth ? currentUser.monthlyPostsCount : 0;
+  const monthlyCount =
+    currentUser.lastPostMonth === currentMonth ? currentUser.monthlyPostsCount : 0;
+
+  const newFlyer: Flyer = {
+    id: Date.now().toString(),
+    title: flyerData.title,
+    description: flyerData.description,
+    category: flyerData.category as any,
+    businessName: flyerData.businessName,
+    imageUrl: flyerData.imageUrl ||
+      'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=500',
+    discount: flyerData.discount,
+    location: {
+      address: flyerData.address,
+      city: flyerData.city,
+      state: flyerData.state || 'IL',
+      zipCode: flyerData.zipCode || '60601',
+      lat: 41.8781 + (Math.random() - 0.5) * 0.1,
+      lng: -87.6298 + (Math.random() - 0.5) * 0.1,
+      distance: Math.round(Math.random() * 5 * 10) / 10
+    },
+    views: 0,
+    reactions: 0,
+    postedDate: new Date().toISOString().split('T')[0],
+    expiryDate: flyerData.expiryDate,
+    redemptionCode: `CODE${Math.random().toString(36).substr(2, 6).toUpperCase()}`,
+    isActive: true,
+    userId: currentUser.id,
+    isPremium: currentUser.isPremium,
+    reviews: [],
+    averageRating: 0
+  };
+
+  setFlyers(prev => [newFlyer, ...prev]);
+
+  if (!businessNames.find(b => b.businessName === flyerData.businessName)) {
+    const newBusiness: BusinessRegistry = {
+      businessName: flyerData.businessName,
+      userId: currentUser.id,
+      registeredDate: new Date().toISOString().split('T')[0],
+      location: {
+        city: flyerData.city,
+        state: flyerData.state || 'IL'
+      }
+    };
+    setBusinessNames(prev => [...prev, newBusiness]);
+  }
+
+  setCurrentUser(prev => ({
+    ...prev,
+    postsCount: prev.postsCount + 1,
+    monthlyPostsCount: monthlyCount + 1,
+    lastPostMonth: currentMonth,
+    businessName: flyerData.businessName
+  }));
+
+  setUsers(prev =>
+    prev.map(user =>
+      user.id === currentUser.id
+        ? {
+            ...user,
+            postsCount: user.postsCount + 1,
+            monthlyPostsCount: monthlyCount + 1,
+            lastPostMonth: currentMonth,
+            businessName: flyerData.businessName
+          }
+        : user
+    )
+  );
+};
+
+const handlePremiumSubscribe = (plan: 'monthly' | 'yearly') => {
+  const expiryDate = new Date();
+  if (plan === 'monthly') {
+    expiryDate.setMonth(expiryDate.getMonth() + 1);
+  } else {
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+  }
+
+  setCurrentUser(prev => ({
+    ...prev,
+    isPremium: true,
+    premiumExpiryDate: expiryDate.toISOString().split('T')[0]
+  }));
+
+  setUsers(prev =>
+    prev.map(user =>
+      user.id === currentUser.id
+        ? {
+            ...user,
+            isPremium: true,
+            premiumExpiryDate: expiryDate.toISOString().split('T')[0]
+          }
+        : user
+    )
+  );
+
+  setIsPremiumModalOpen(false);
+  alert(`Premium subscription activated! You can now post unlimited flyers.`);
+};
+
+const handleProfileClick = () => {
+  setCurrentView(currentUser.isAdmin ? 'admin' : 'profile');
+};
+
+const filteredFlyers = selectedCategory
+  ? sortedFlyers.filter(flyer => flyer.category === selectedCategory.id)
+  : sortedFlyers;
+
+const userFlyers = flyers.filter(flyer => flyer.userId === currentUser.id);
+
+const currentMonth = new Date().toISOString().slice(0, 7);
+const monthlyPostsCount = currentUser.lastPostMonth === currentMonth
+  ? currentUser.monthlyPostsCount
+  : 0;
+
 
   return (
     <div className="min-h-screen bg-gray-50 font-poppins">
