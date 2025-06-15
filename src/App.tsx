@@ -578,4 +578,3 @@ const monthlyPostsCount = currentUser.lastPostMonth === currentMonth
 }
 
 export default App;
-export default App;
