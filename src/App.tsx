@@ -187,7 +187,7 @@ useEffect(() => {
 
 
   const handleSportsLeagueSelect = (leagueId : string) => {
-    const sportsCategory = categories.find(c => c.id == = 'sports');
+    const sportsCategory = categories.find(c => c.id === 'sports');
     if (sportsCategory) {
       setSelectedCategory(sportsCategory);
       setCurrentView('category');
@@ -218,7 +218,7 @@ useEffect(() => {
     };
 
     setFlyers(prev => prev.map(flyer => {
-      if (flyer.id == = flyerId) {
+      if (flyer.id === flyerId) {
         const updatedReviews = [... flyer.reviews, newReview ];
         const averageRating =
             updatedReviews.reduce((sum, review) => sum + review.rating, 0) /
@@ -251,7 +251,7 @@ useEffect(() => {
 
   const handleHelpfulClick = (flyerId : string, reviewId : string) => {
     setFlyers(prev => prev.map(flyer => {
-      if (flyer.id == = flyerId) {
+      if (flyer.id === flyerId) {
         return {
           ... flyer,
           reviews : flyer.reviews.map(
@@ -328,7 +328,7 @@ useEffect(() => {
 
     setFlyers(prev => [ newFlyer, ... prev ]);
 
-    if (!businessNames.find(b => b.businessName == = flyerData.businessName)) {
+    if (!businessNames.find(b => b.businessName === flyerData.businessName)) {
       const newBusiness : BusinessRegistry = {
         businessName : flyerData.businessName,
         userId : currentUser.id,
@@ -346,7 +346,7 @@ useEffect(() => {
                             businessName : flyerData.businessName
                           }));
 
-    setUsers(prev => prev.map(user => user.id == = currentUser.id ? {
+    setUsers(prev => prev.map(user => user.id === currentUser.id ? {
       ... user,
       postsCount : user.postsCount + 1,
       monthlyPostsCount : monthlyCount + 1,
@@ -358,7 +358,7 @@ useEffect(() => {
 
   const handlePremiumSubscribe = (plan : 'monthly' | 'yearly') => {
     const expiryDate = new Date();
-    if (plan == = 'monthly') {
+    if (plan === 'monthly') {
       expiryDate.setMonth(expiryDate.getMonth() + 1);
     } else {
       expiryDate.setFullYear(expiryDate.getFullYear() + 1);
@@ -371,7 +371,7 @@ useEffect(() => {
                  premiumExpiryDate : expiryDate.toISOString().split('T')[0]
                }));
 
-    setUsers(prev => prev.map(user => user.id == = currentUser.id ? {
+    setUsers(prev => prev.map(user => user.id === currentUser.id ? {
       ... user,
       isPremium : true,
       premiumExpiryDate : expiryDate.toISOString().split('T')[0]
@@ -395,7 +395,7 @@ useEffect(() => {
                                                    = selectedCategory.id)
                              : sortedFlyers;
 
-  const userFlyers = flyers.filter(flyer => flyer.userId == = currentUser.id);
+  const userFlyers = flyers.filter(flyer => flyer.userId === currentUser.id);
   const currentMonth = new Date().toISOString().slice(0, 7);
   const monthlyPostsCount = currentUser.lastPostMonth ==
       = currentMonth ? currentUser.monthlyPostsCount : 0;
@@ -475,7 +475,7 @@ useEffect(() => {
                     handleFlyerClick} onReact = {handleReact} />)}
       
       {
-    currentView == = 'detail' && selectedFlyer &&
+    currentView === 'detail' && selectedFlyer &&
                      (<FlyerDetail flyer = {selectedFlyer} onBack =
                            {() => setCurrentView('category')} onReact =
                                {handleReact} onSubmitReview =
