@@ -100,37 +100,33 @@ function App() {
           : [];
 
   // Simulate view tracking
-  useEffect(
-      () =>
-           {
-             if (selectedFlyer) {
-               setFlyers(
-                   prev =
-                       > prev.map(flyer => flyer.id ==
-                                  = selectedFlyer.id
-                                        ? {... flyer, views : flyer.views + 1}
-                                        : flyer));
-             }
-           },
-      [selectedFlyer]);
-  useEffect(() =>
-                 {
-                   const unsubscribe = onAuthStateChanged(
-                       auth, (user) => {
-                         setFirebaseUser(user);
-                         if (user) {
-                           // Optionally map user to currentUser in your system
-                           const matchedUser =
-                               mockUsers.find(u => u.email == = user.email);
-                           if (matchedUser) {
-                             setCurrentUser(matchedUser);
-                           }
-                         }
-                       });
+ useEffect(() => {
+  if (selectedFlyer) {
+    setFlyers(prev =>
+      prev.map(flyer =>
+        flyer.id === selectedFlyer.id
+          ? { ...flyer, views: flyer.views + 1 }
+          : flyer
+      )
+    );
+  }
+}, [selectedFlyer]);
 
-                   return () => unsubscribe();
-                 },
-            []);
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    setFirebaseUser(user);
+    if (user) {
+      // Optionally map user to currentUser in your system
+      const matchedUser = mockUsers.find(u => u.email === user.email);
+      if (matchedUser) {
+        setCurrentUser(matchedUser);
+      }
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
   const handleSignup = async() => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
