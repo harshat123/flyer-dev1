@@ -173,17 +173,18 @@ useEffect(() => {
     localStorage.setItem('geolocation-prompted', 'true');
   };
 
-  const handleCategorySelect = (categoryId : string) => {
-    const category = categories.find(c => c.id == = categoryId);
-    if (category) {
-      if (category.id == = 'sports') {
-        setIsSportsModalOpen(true);
-        return;
-      }
-      setSelectedCategory(category);
-      setCurrentView('category');
+  const handleCategorySelect = (categoryId: string) => {
+  const category = categories.find(c => c.id === categoryId);
+  if (category) {
+    if (category.id === 'sports') {
+      setIsSportsModalOpen(true);
+      return;
     }
-  };
+    setSelectedCategory(category);
+    setCurrentView('category');
+  }
+};
+
 
   const handleSportsLeagueSelect = (leagueId : string) => {
     const sportsCategory = categories.find(c => c.id == = 'sports');
